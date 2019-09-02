@@ -30,7 +30,6 @@ message.addEventListener('keypress', () => {
 // listen to emits
 
 socket.on('msg', (data) => {
-    console.log(data)
     feedback.innerHTML = ''
     display.innerHTML += '<p><strong> ' + data.handle + ': </strong>' + data.message + ' </p>'
 })

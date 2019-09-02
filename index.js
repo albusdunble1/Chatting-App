@@ -18,13 +18,13 @@ let io = socket(server);
 io.on('connection', (socket) => {
     console.log('Connection from ' + socket.id)
 
+    // emit 'msg' event and it's data to all sockets
     socket.on('msg', (data) => {
-        console.log('msg')
         io.sockets.emit('msg', data)
     })
 
+    // broadcast 'feedback' event and it's data to all sockets except the sender
     socket.on('feedback', (handle) => {
-        console.log('feedback')
         socket.broadcast.emit('feedback', handle)
     })
 
