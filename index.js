@@ -6,8 +6,9 @@ available_rooms = ['Room 1', 'Room 2', 'Room 3']
 
 // App setup 
 let app = express();
+let PORT = process.env.PORT || 4000
 
-let server = app.listen(4000, function(){
+let server = app.listen(PORT, function(){
     console.log('listening to 4000')
 });
 
