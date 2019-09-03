@@ -1,0 +1,19 @@
+.left{
+    display: inline-block;
+    width: 50%;
+    vertical-align: top;
+}
+
+.right{
+    display: inline-block;
+    width: 50%;
+    vertical-align: top;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+#rooms h2{
+    cursor: pointer;
+}

@@ -9,15 +9,23 @@
     <title>Juel's Chat App</title>
 </head>
 <body>
-    <div id="output">
-        <div id="display"></div>
-        <div id="feedback"></div>
+    <div class="left">
+        <h1>Available Rooms</h1>
+        <div id="rooms"></div>
+        <input id="room_name" type="text" placeholder="Room Name">
+        <button id="create_room">Create New Room</button>
+    </div><div class="right">
+        <div id="output">
+            <div id="display"></div>
+            <div id="feedback"></div>
+        </div>
+        <div id="input">
+            <input id="handle" type="text" placeholder="Handle">
+            <input id="message" type="text" placeholder="Message">
+            <button id="submit">Send Message</button>
+        </div>
     </div>
-    <div id="input">
-        <input id="handle" type="text" placeholder="Handle">
-        <input id="message" type="text" placeholder="Message">
-        <button id="submit">Send Message</button>
-    </div>
+
 
     <script src="app.js"></script>
 </body>
