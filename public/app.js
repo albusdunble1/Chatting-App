@@ -4,9 +4,8 @@ let socket = io.connect();
 // ====================== Query D0M ======================
 
 let output = document.querySelector('#output')
-let display = document.querySelector('#display')
+// let display = document.querySelector('#display')
 let message = document.querySelector('#message')
-let feedback = document.querySelector('#feedback')
 let handle = document.querySelector('#handle')
 let submit = document.querySelector('#submit')
 let rooms = document.querySelector('#rooms')
@@ -15,11 +14,18 @@ let create_room = document.querySelector('#create_room')
 let individual_room = document.querySelector('#rooms h5')
 let online_users = document.querySelector('#online_users')
 let total_online = document.querySelector('#total_online')
+let current_room_name = document.querySelector('#current_room_name')
 
 let available_rooms = []
 
 // default room
 let current_room = 'Room 1'
+
+// first child of output div
+let theFirstChild;
+
+
+let newMessage = ''
 
 
 
@@ -35,13 +41,20 @@ document.addEventListener("click", (event) => {
         socket.emit('unsubscribe', current_room)
         // join room
         socket.emit('subscribe', element.textContent)
-        // reset chat window
-        display.innerHTML = ''
-        feedback.innerHTML = ''
+
         console.log('left ' + current_room + ' and joined ' + element.textContent)
 
         // change current_room to newly joined room
         current_room = element.textContent
+
+        // change room name
+        current_room_name.textContent = current_room
+
+        // reset chat window
+        output.innerHTML = ''
+        output.innerHTML = '<p><strong style="color:green;">' + socket.id + ' has joined ' + current_room + '.</strong></p>'
+        output.innerHTML += '<p id="feedback"></p>'
+
     }
 } );
 
@@ -81,18 +94,30 @@ message.addEventListener('keypress', () => {
 // join default room once connected to the server
 socket.on('connect', (data) => {
     socket.emit('subscribe', current_room)
+    current_room_name.textContent = current_room
+    output.innerHTML = ''
+    output.innerHTML = '<p><strong style="color:green;">' + socket.id + ' has joined ' + current_room + '.</strong></p>'
+    output.innerHTML += '<p id="feedback"></p>'
+    let feedback = document.querySelector('#feedback')
 })
 
 // display user message in the chat window
 socket.on('msg', (data) => {
-    console.log(data.message)
+    // theFirstChild = feedback
     feedback.innerHTML = ''
-    display.innerHTML += '<p><strong> ' + data.handle + ': </strong>' + data.message + ' </p>'
+    // output.innerHTML += '<p><strong> ' + data.handle + ': </strong>' + data.message + ' </p>'
+    let helper = document.createElement('p');
+    helper.innerHTML = '<strong>' + data.handle  + ': </strong>' + data.message + '</p>'
+    output.insertBefore(helper, feedback);
+    // make sure it is always scrolled to the bottom
+    output.scrollTop = output.scrollHeight;
 })
 
 // notify other users in the room that this user is typing
 socket.on('feedback', (handle) => {
     feedback.innerHTML = '<p><em> ' + handle + ' is typing...  </em></p>'
+    // make sure it is always scrolled to the bottom
+    output.scrollTop = output.scrollHeight;
 })
 
 // retrieve the latest available rooms from the server
@@ -106,12 +131,24 @@ socket.on('available rooms', (all) => {
 
 // notify the room about the new user
 socket.on('joined', (data) => {
-    display.innerHTML += '<p style="color:green;"><strong>' + data.id + ' has joined ' + data.name + '.</strong></p>'
+    // theFirstChild = feedback
+    // insert before feedback paragraph
+    let helper = document.createElement('p');
+    helper.innerHTML = '<strong style="color:green;">' + data.id + ' has joined ' + data.name + '.</strong>'
+    output.insertBefore(helper, feedback);
+    // make sure it is always scrolled to the bottom
+    output.scrollTop = output.scrollHeight;
 })
 
 // notify the room that a user has left
 socket.on('left', (user) => {
-    display.innerHTML += '<p style="color:red;"><strong>' + user + ' has left ' + current_room + '.</strong></p>'
+    // theFirstChild = feedback
+    // insert before feedback paragraph
+    let helper = document.createElement('p');
+    helper.innerHTML = '<strong style="color:red;">' + user + ' has left ' + current_room + '.</strong>'
+    output.insertBefore(helper, feedback);
+    // make sure it is always scrolled to the bottom
+    output.scrollTop = output.scrollHeight;
 })
 
 

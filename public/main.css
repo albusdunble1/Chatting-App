@@ -1,9 +1,22 @@
-.left{
-    position: relative;
+
+
+input{
+    padding-left: 5px;
 }
 
-.right{
-    align-self: flex-end;
+.left {
+    display: flex;
+    flex-direction: column;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+}
+
+.row{
+    padding-top: 2rem;
+    padding-bottom: 10rem;
 }
 
 *{
@@ -16,21 +29,118 @@
 
 #online_users {
     height: 150px;
-    overflow-y: scroll;
+    overflow-y: auto;
     border: 1px solid #00cd00;
     border-radius: 10px;
-    padding: 0 1rem;
+    padding: 0 10px;
 }
 
-/* .online-wrapper {
-    position: absolute;
-    width: calc(100% - 2rem);
-    bottom: 0;
-} */
+#output {
+    flex-direction: column;
+    justify-content: flex-end;
+    flex-grow: 2;
+    overflow-y: auto;
+    border: 1px solid #d6d6d6;
+    margin-bottom: 1rem;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#input {
+    display: flex;
+    z-index: 1;
+}
+
+#input input {
+    flex-grow: 4;
+    margin-right: 5px;
+}
+
+.create-room-wrapper {
+    display: flex;
+}
+
+.create-room-wrapper input {
+    flex-grow: 6;
+    margin-right: 5px;
+}
+
+.create-room-wrapper button {
+    flex-grow: 1;
+    font-weight: bold;
+}
+
+#rooms{
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border: 1px solid #d6d6d6;
+    margin-bottom: 1rem;
+    padding: 5px;
+    border-radius: 5px;
+}
 
 
 @media (max-width: 991px) {
-    .right{
-        margin-top: 4rem;
+    html, body, .container, .row{
+        height: 100%;
     }
+
+    .row{
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .left{
+        height: 60%;
+    }
+
+    .right{
+        margin-top: 2rem;
+        height: calc(40% - 2rem);
+    }
+
+    #output {
+        height: 250px;
+    }
+
+    #input {
+        height: auto;
+    }
+
+    #rooms{
+        height: 140px;
+    }
+    
+
+    
+}
+
+@media (max-width: 575px) {
+    #input input {
+        margin: 0;
+        margin-bottom: 5px;
+        padding-left: 5px;
+    }
+
+    #input {
+        flex-direction: column;
+    }
+}
+
+
+@media (min-width: 992px) {
+    html, body, .container, .row, .right, .left{
+        height: 100%
+    }
+    /* .left {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .right {
+        display: flex;
+        flex-direction: column;
+    } */
 }

@@ -32,7 +32,8 @@ io.on('connection', (socket) => {
         users_room[socket.id] = room
         console.log(users_room)
         socket.join(room)
-        io.sockets.in(room).emit('joined', {id: socket.id, name: room})
+        // io.sockets.in(room).emit('joined', {id: socket.id, name: room})
+        socket.broadcast.in(room).emit('joined', {id: socket.id, name: room})
         io.sockets.emit('users online', {users_room: users_room})
     })
 
