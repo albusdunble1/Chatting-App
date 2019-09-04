@@ -2,6 +2,7 @@ let socket = io.connect();
 
 
 // ====================== Query D0M ======================
+
 let output = document.querySelector('#output')
 let display = document.querySelector('#display')
 let message = document.querySelector('#message')
@@ -11,7 +12,9 @@ let submit = document.querySelector('#submit')
 let rooms = document.querySelector('#rooms')
 let room_name = document.querySelector('#room_name')
 let create_room = document.querySelector('#create_room')
-let individual_room = document.querySelector('#rooms h2')
+let individual_room = document.querySelector('#rooms h5')
+let online_users = document.querySelector('#online_users')
+let total_online = document.querySelector('#total_online')
 
 let available_rooms = []
 
@@ -23,11 +26,11 @@ let current_room = 'Room 1'
 
 // ====================== Set up event listeners ======================
 
-// click event listener for each room(h2) in available rooms
+// click event listener for each room(h5) in available rooms
 document.addEventListener("click", (event) => {
     var element = event.target;
-    // if h2 tag (room name) is found
-    if(element.tagName == 'H2'){
+    // if h5 tag (room name) is found
+    if(element.tagName == 'H5'){
         // leave room
         socket.emit('unsubscribe', current_room)
         // join room
@@ -97,13 +100,32 @@ socket.on('available rooms', (all) => {
     available_rooms = all
     rooms.innerHTML = ''
     for (let i = 0; i < available_rooms.length; i++){
-        rooms.innerHTML += '<h2> '+ available_rooms[i] + '</h2>'
+        rooms.innerHTML += '<h5>'+ available_rooms[i] + '</h5>'
     }
 })
 
 // notify the room about the new user
 socket.on('joined', (data) => {
-    display.innerHTML += '<p style="color:green;"><strong>' + data.id + ' has joined ' + data.name + ' .</strong></p>'
+    display.innerHTML += '<p style="color:green;"><strong>' + data.id + ' has joined ' + data.name + '.</strong></p>'
 })
+
+// notify the room that a user has left
+socket.on('left', (user) => {
+    display.innerHTML += '<p style="color:red;"><strong>' + user + ' has left ' + current_room + '.</strong></p>'
+})
+
+
+// update online users
+socket.on('users online', (data) => {
+    online_users.innerHTML = ''
+    total_online.textContent = Object.keys(data.users_room).length
+    for (let key in data.users_room){
+        online_users.innerHTML += '<p style="color:green;"><strong>' + key + ' in ' + data.users_room[key] +'.</strong></p>'
+    }
+})
+
+
+
+
 
 

@@ -2,7 +2,9 @@ let express = require('express');
 let socket = require('socket.io');
 
 // default rooms
-available_rooms = ['Room 1', 'Room 2', 'Room 3']
+let available_rooms = ['Room 1', 'Room 2', 'Room 3']
+let users = []
+let users_room = {}
 
 // App setup 
 let app = express();
@@ -19,18 +21,26 @@ app.use(express.static('public'));
 let io = socket(server);
 
 io.on('connection', (socket) => {
+    users.push(socket.id)
+    console.log(users)
     socket.emit('available rooms', available_rooms)
     console.log('Connection from ' + socket.id)
+    
 
     // join a room
     socket.on('subscribe', (room) => {
+        users_room[socket.id] = room
+        console.log(users_room)
         socket.join(room)
         io.sockets.in(room).emit('joined', {id: socket.id, name: room})
+        io.sockets.emit('users online', {users_room: users_room})
     })
 
     // leave a room
     socket.on('unsubscribe', (current_room) => {
+        socket.broadcast.in(current_room).emit('left', socket.id)
         socket.leave(current_room)
+        
     })
 
     // emit 'msg' event and it's data to all sockets
@@ -48,4 +58,12 @@ io.on('connection', (socket) => {
         available_rooms.push(room)
         io.sockets.emit('available rooms', available_rooms)
     })
+
+    // when user disconnects
+    socket.on('disconnect', () => {
+        delete users_room[socket.id]
+        io.sockets.emit('users online', {users_room: users_room})
+    });
+
+
 });
