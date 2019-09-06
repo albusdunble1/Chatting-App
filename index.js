@@ -22,15 +22,12 @@ let io = socket(server);
 
 io.on('connection', (socket) => {
     users.push(socket.id)
-    console.log(users)
     socket.emit('available rooms', available_rooms)
     console.log('Connection from ' + socket.id)
     
-
     // join a room
     socket.on('subscribe', (room) => {
         users_room[socket.id] = room
-        console.log(users_room)
         socket.join(room)
         // io.sockets.in(room).emit('joined', {id: socket.id, name: room})
         socket.broadcast.in(room).emit('joined', {id: socket.id, name: room})
@@ -41,15 +38,14 @@ io.on('connection', (socket) => {
     socket.on('unsubscribe', (current_room) => {
         socket.broadcast.in(current_room).emit('left', socket.id)
         socket.leave(current_room)
-        
     })
 
-    // emit 'msg' event and it's data to all sockets
+    // emit 'msg' event and it's data to all sockets in the same room
     socket.on('msg', (data) => {
         io.sockets.in(data.room).emit('msg', data.details)
     })
 
-    // broadcast 'feedback' event and it's data to all sockets except the sender
+    // broadcast 'feedback' event and it's data to all sockets in the same room except the sender
     socket.on('feedback', (data) => {
         socket.broadcast.in(data.room).emit('feedback', data.handle)
     })
@@ -65,6 +61,4 @@ io.on('connection', (socket) => {
         delete users_room[socket.id]
         io.sockets.emit('users online', {users_room: users_room})
     });
-
-
 });
